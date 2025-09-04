@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday, Nur Batrisyia! 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  /* --- sama macam sebelum ni --- */
+  :root{
+    --bg1:#ff9a9e; --bg2:#fad0c4; --bg3:#fbc2eb; --bg4:#a18cd1;
+    --card:#ffffffee; --accent:#ff4d6d; --accent2:#6c63ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{font-family:Poppins,system-ui; background:linear-gradient(135deg,var(--bg1),var(--bg2));
+       overflow-x:hidden; color:#222;}
+  .heart{position:fixed; bottom:-40px; font-size:24px; opacity:.8; animation: floatUp linear forwards;}
+  @keyframes floatUp{to{ transform:translateY(-110vh) rotate(25deg); opacity:0; }}
+  .balloon{position:fixed; bottom:-120px; width:60px; height:80px; border-radius:60%;
+           animation: rise 12s linear infinite;}
+  .balloon:after{content:""; position:absolute; left:50%; bottom:-25px; width:2px; height:30px; background:#0002;}
+  @keyframes rise{ to{ transform: translateY(-130vh) } }
+  .wrap{min-height:100%; display:grid; place-items:center; padding:24px;}
+  .card{width:min(780px, 92vw); background:var(--card); border-radius:22px;
+        padding:28px; text-align:center; box-shadow:0 12px 40px #00000025;}
+  h1{margin:8px 0 6px; font-weight:800;}
+  .subtitle{opacity:.8}
+  .avatar{width:120px; height:120px; border-radius:50%; border:5px solid #fff;}
+  .actions{margin-top:18px; display:flex; gap:12px; justify-content:center;}
+  button{border:0; padding:12px 18px; border-radius:12px; font-weight:600; cursor:pointer;}
+  .primary{background:linear-gradient(135deg,#ff5d8f,#ffa3b1); color:#fff;}
+  .ghost{background:#fff; color:#333;}
+  .message{margin:18px auto 0; max-width:60ch; font-size:1.05rem; line-height:1.65; display:none;}
+  .counter{margin-top:14px; font-size:.95rem; opacity:.85}
+  #confetti{position:fixed; inset:0; pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div id="balloonLayer"></div>
+
+<!-- 🎶 Lagu background -->
+<audio id="bgm" autoplay loop>
+  <source src="music.mp3" type="audio/mpeg">
+  Browser awak tak support audio.
+</audio>
+
+<div class="wrap">
+  <div class="card">
+    <img class="avatar" src="test.jpg" alt="Nur Batrisyia" />
+    <h1>Happy Birthday, Nur Batrisyia! 🎂✨</h1>
+    <p class="subtitle">Daripada Danish — untuk awak yang paling istimewa 💐</p>
+
+    <div class="actions">
+      <button class="primary" id="btnOpen">🎁 Buka surprise</button>
+      <button class="ghost" id="btnHearts">❤️ Tambah cinta</button>
+      <button class="ghost" onclick="toggleMusic()">🎶 Pause/Play lagu</button>
+    </div>
+
+    <p id="msg" class="message"></p>
+    <div class="counter" id="loveCount">Cinta: 0</div>
+  </div>
+</div>
+
+<script>
+  const NAME = "Nur Batrisyia";
+  const MESSAGE = `Sayang ${NAME}, hari ini Danish doakan awak dipermudahkan semua urusan, 
+  dilimpahkan rezeki, dan sentiasa dikelilingi bahagia. Terima kasih kerana hadir dan 
+  mewarnai hidup Danish. Semoga kita terus melangkah bersama — hari ini, esok, dan selamanya. 
+  Happy Birthday, my favourite person. I love you ❤️`;
+
+  const msgEl = document.getElementById('msg');
+  function typeText(text, speed=24){
+    msgEl.style.display='block'; msgEl.textContent="";
+    let i=0; const timer=setInterval(()=>{
+      msgEl.textContent=text.slice(0,i++);
+      if(i>text.length) clearInterval(timer);
+    },speed);
+  }
+
+  let love=0;
+  const loveEl=document.getElementById('loveCount');
+  function spawnHeart(){
+    const h=document.createElement('div');
+    h.className='heart'; h.textContent=Math.random()<0.5?"❤️":"💖";
+    h.style.left=(Math.random()*100)+"vw";
+    h.style.animationDuration=(6+Math.random()*6)+"s";
+    document.body.appendChild(h); setTimeout(()=>h.remove(),12000);
+  }
+  document.getElementById('btnHearts').addEventListener('click',()=>{
+    love++; loveEl.textContent="Cinta: "+love;
+    for(let i=0;i<6;i++) setTimeout(spawnHeart,i*120);
+  });
+
+  const balloonColors=["#ff7eb6","#6c63ff","#ffd166","#06d6a0","#f94144","#90e0ef"];
+  const balloonLayer=document.getElementById('balloonLayer');
+  for(let i=0;i<10;i++){const b=document.createElement('div');b.className='balloon';
+    b.style.left=(Math.random()*100)+'vw';b.style.animationDelay=(Math.random()*-12)+'s';
+    b.style.animationDuration=(10+Math.random()*8)+'s';
+    b.style.background=balloonColors[(Math.random()*balloonColors.length)|0];
+    balloonLayer.appendChild(b);
+  }
+
+  const cvs=document.getElementById('confetti');const ctx=cvs.getContext('2d');let confettiPieces=[];
+  function resize(){cvs.width=innerWidth;cvs.height=innerHeight}addEventListener('resize',resize);resize();
+  function makeConfetti(n=180){confettiPieces=[];for(let i=0;i<n;i++){confettiPieces.push({
+    x:Math.random()*cvs.width,y:-20-Math.random()*cvs.height*.5,s:4+Math.random()*6,
+    a:Math.random()*Math.PI*2,v:1.5+Math.random()*2.5,col:`hsl(${Math.random()*360},90%,60%)`});}}
+  let confettiTime=0;
+  function drawConfetti(t){ctx.clearRect(0,0,cvs.width,cvs.height);
+    confettiPieces.forEach(p=>{p.y+=p.v;ctx.fillStyle=p.col;ctx.fillRect(p.x,p.y,p.s,p.s)});
+    confettiPieces=confettiPieces.filter(p=>p.y<cvs.height+30);
+    if(performance.now()-confettiTime<6500)requestAnimationFrame(drawConfetti);
+  }
+
+  document.getElementById('btnOpen').addEventListener('click',()=>{
+    typeText(MESSAGE,20);makeConfetti();confettiTime=performance.now();
+    requestAnimationFrame(drawConfetti);for(let i=0;i<8;i++)setTimeout(spawnHeart,i*160);
+  });
+
+  // 🎶 Music toggle
+  const bgm=document.getElementById('bgm');
+  function toggleMusic(){ if(bgm.paused) bgm.play(); else bgm.pause(); }
+
+  document.title=`Happy Birthday, ${NAME}! 🎉`;
+</script>
+</body>
+</html>
